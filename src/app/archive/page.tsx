@@ -7,6 +7,8 @@ import styles from './archive.module.css'
 import { QuestionData } from '../../types/types'
 import { normalizeContent } from '../../utils/format'
 import AddQuestion from '../../components/AddQuestion'
+import Dashboard from '../../components/Dashboard'
+import Link from 'next/link'
 
 interface ArchivedQuestion extends QuestionData {
   id: string
@@ -135,6 +137,12 @@ export default function Archive() {
         <div className={styles.header}>
           <h1>题目归档</h1>
           <div className={styles.headerButtons}>
+            <Link 
+              href="/dashboard"
+              className={styles.dashboardButton}
+            >
+              查看数据看板
+            </Link>
             <button 
               className={styles.toggleCatalog}
               onClick={toggleCatalog}
