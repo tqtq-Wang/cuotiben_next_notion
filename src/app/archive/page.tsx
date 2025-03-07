@@ -7,7 +7,6 @@ import styles from './archive.module.css'
 import { QuestionData } from '../../types/types'
 import { normalizeContent } from '../../utils/format'
 import AddQuestion from '../../components/AddQuestion'
-import Dashboard from '../../components/Dashboard'
 import Link from 'next/link'
 
 interface ArchivedQuestion extends QuestionData {
