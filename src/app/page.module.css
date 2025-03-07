@@ -1,168 +1,220 @@
-.page {
-  --gray-rgb: 0, 0, 0;
-  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
-  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-
-  display: grid;
-  grid-template-rows: 20px 1fr 20px;
-  align-items: center;
-  justify-items: center;
-  min-height: 100svh;
-  padding: 80px;
-  gap: 64px;
-  font-family: var(--font-geist-sans);
-}
-
-@media (prefers-color-scheme: dark) {
-  .page {
-    --gray-rgb: 255, 255, 255;
-    --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
-    --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-  }
-}
-
+/* src/app/page.module.css */
 .main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', system-ui;
+}
+
+.tabContainer {
   display: flex;
-  flex-direction: column;
-  gap: 32px;
-  grid-row-start: 2;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eee;
 }
 
-.main ol {
-  font-family: var(--font-geist-mono);
-  padding-left: 0;
-  margin: 0;
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: -0.01em;
-  list-style-position: inside;
-}
-
-.main li:not(:last-of-type) {
-  margin-bottom: 8px;
-}
-
-.main code {
-  font-family: inherit;
-  background: var(--gray-alpha-100);
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-.ctas {
-  display: flex;
-  gap: 16px;
-}
-
-.ctas a {
-  appearance: none;
-  border-radius: 128px;
-  height: 48px;
-  padding: 0 20px;
+.tab {
+  padding: 1rem 2rem;
   border: none;
-  border: 1px solid transparent;
-  transition:
-    background 0.2s,
-    color 0.2s,
-    border-color 0.2s;
+  background: none;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  line-height: 20px;
   font-weight: 500;
+  color: #666;
+  transition: all 0.2s;
 }
 
-a.primary {
-  background: var(--foreground);
-  color: var(--background);
-  gap: 8px;
+.activeTab {
+  color: #0070f3;
+  border-bottom: 3px solid #0070f3;
 }
 
-a.secondary {
-  border-color: var(--gray-alpha-200);
-  min-width: 180px;
+.dropzone {
+  border: 2px dashed #0070f3;
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  cursor: pointer;
+  margin: 2rem 0;
+  background: #f8f9ff;
+  transition: background 0.2s;
 }
 
-.footer {
-  grid-row-start: 3;
+.dropzone:hover {
+  background: #eef2ff;
+}
+
+.dropzone p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.dropzone small {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.jsonInputContainer {
+  margin: 2rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.jsonEditor {
+  width: 100%;
+  height: 300px;
+  padding: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  border: none;
+  resize: vertical;
+  background: #f8f9fa;
+}
+
+.error {
+  padding: 1rem;
+  background: #ffe3e6;
+  color: #dc3545;
+  border-top: 1px solid #ffc9d2;
+}
+
+.inputSection {
+  margin: 2rem 0;
+}
+
+.inputSection label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.reasonInput {
+  width: 100%;
+  height: 120px;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.preview {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.preview h3 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.metaInfo {
+  margin-top: 1.5rem;
+}
+
+.metaItem {
+  margin: 1.5rem 0;
+}
+
+.metaLabel {
+  font-weight: 500;
+  color: #666;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.tags {
   display: flex;
-  gap: 24px;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.footer a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.tag {
+  background: #eef4ff;
+  color: #0052cc;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
 }
 
-.footer img {
-  flex-shrink: 0;
+.submitButton {
+  width: 100%;
+  padding: 1.2rem;
+  background: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
-
-  .footer a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
+.submitButton:hover {
+  background: #0052cc;
 }
 
-@media (max-width: 600px) {
-  .page {
-    padding: 32px;
-    padding-bottom: 80px;
-  }
-
-  .main {
-    align-items: center;
-  }
-
-  .main ol {
-    text-align: center;
-  }
-
-  .ctas {
-    flex-direction: column;
-  }
-
-  .ctas a {
-    font-size: 14px;
-    height: 40px;
-    padding: 0 16px;
-  }
-
-  a.secondary {
-    min-width: auto;
-  }
-
-  .footer {
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-  }
+.submitButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
+.katex {
+  font-size: 1.1em !important;
+  padding: 0.2em 0;
+}
+
+.solutionFlow .math {
+  background: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+}
+
+.detailedSolution {
+  line-height: 1.8;
+}
+
+.detailedSolution p {
+  margin: 1rem 0;
+  white-space: pre-wrap;
+}
+
+/* 调整公式显示 */
+.katex {
+  font-size: 1.1em !important;
+  padding: 0.2em 0.5em !important;
+  background: #f8f9fa !important;
+  border-radius: 4px;
+}
+
+/* 优化换行显示 */
+.detailedSolution br {
+  content: '';
+  display: block;
+  margin: 0.8rem 0;
+}
+
+.nav {
+  margin-bottom: 2rem;
+  text-align: right;
+}
+
+.navButton {
+  padding: 0.5rem 1rem;
+  background: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.navButton:hover {
+  background: #0051a2;
 }

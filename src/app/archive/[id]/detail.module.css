@@ -1,0 +1,327 @@
+.main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.backButton {
+  padding: 0.5rem 1rem;
+  background: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.backButton:hover {
+  background: #0051a2;
+}
+
+.content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 2rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.section h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.questionContent {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  background: #eef4ff;
+  color: #0052cc;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.solutionFlow,
+.detailedSolution {
+  line-height: 1.8;
+}
+
+.errorReason {
+  color: #666;
+  font-style: italic;
+}
+
+.meta {
+  margin-top: 2rem;
+  color: #666;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+/* LaTeX 公式样式 */
+.content :global(.katex) {
+  font-size: 1.1em;
+  padding: 0.2em 0.5em;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.loadingContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 1000;
+}
+
+.loadingContainer p {
+  margin-top: 1rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.loadingSpinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #0070f3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.errorContainer h2 {
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+.errorContainer p {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.errorContainer .backButton {
+  margin-top: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.editButton {
+  padding: 0.3rem 0.8rem;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.editButton:hover {
+  background: #e0e0e0;
+}
+
+.editControls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.saveButton,
+.cancelButton {
+  padding: 0.3rem 0.8rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.saveButton {
+  background: #0070f3;
+  color: white;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: #0051a2;
+}
+
+.saveButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background: #f0f0f0;
+}
+
+.cancelButton:hover {
+  background: #e0e0e0;
+}
+
+.editTextarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.knowledgeEdit {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.knowledgeInput {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.editTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #eef4ff;
+  color: #0052cc;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.removeTag {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0 0.2rem;
+  font-size: 1.1rem;
+}
+
+.removeTag:hover {
+  color: #dc3545;
+}
+
+.deleteButton {
+  padding: 0.5rem 1rem;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background: #c82333;
+}
+
+.content.editing {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  min-height: 100px;
+  outline: none;
+  cursor: text;
+  background: #fff;
+}
+
+.content.editing:focus {
+  border-color: #0070f3;
+  box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.1);
+}
+
+.addKnowledge {
+  margin-top: 1rem;
+}
+
+.knowledgeInput {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.knowledgeInput:focus {
+  border-color: #0070f3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.1);
+}
+
+.savingIndicator {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 
