@@ -25,7 +25,7 @@
 
 1. 克隆仓库
 ```bash
-git clone https://github.com/tqtq-Wang/-_next_notion.git
+git clone https://github.com/tqtq-Wang/cuotiben_next_notion.git
 cd -_next_notion
 ```
 
