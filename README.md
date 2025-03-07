@@ -1,4 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 考研数学错题本 (Next.js + Notion API)
+
+一个基于 Next.js 和 Notion API 的考研数学错题管理系统。支持 LaTeX 公式渲染、知识点分类、错题归档等功能。
+
+## 功能特点
+
+- 🧮 支持 LaTeX 数学公式渲染
+- 📝 错题详细解析和知识点标注
+- 🗂️ 按知识点分类查看
+- 📊 实时统计和分析
+- ✏️ 在线编辑和更新
+- 🗑️ 软删除支持
+
+## 技术栈
+
+- Next.js 14
+- TypeScript
+- Notion API
+- React Markdown
+- KaTeX
+
+## 快速开始
+
+1. 克隆仓库
 
 ## Getting Started
 
