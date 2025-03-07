@@ -50,6 +50,8 @@
   background: #f8f9fa;
   padding: 1.5rem;
   border-radius: 8px;
+  line-height: 2.2; /* 增加行间距 */
+  margin-bottom: 1.5em;
 }
 
 .tags {
@@ -68,7 +70,8 @@
 
 .solutionFlow,
 .detailedSolution {
-  line-height: 1.8;
+  line-height: 2.2; /* 增加行间距 */
+  margin-bottom: 1.5em;
 }
 
 .errorReason {
@@ -86,9 +89,27 @@
 /* LaTeX 公式样式 */
 .content :global(.katex) {
   font-size: 1.1em;
-  padding: 0.2em 0.5em;
+  padding: 0.4em 0.6em; /* 增加公式的上下内边距 */
   background: #f8f9fa;
   border-radius: 4px;
+  margin: 0.3em 0; /* 添加公式的上下外边距 */
+}
+
+/* LaTeX 公式样式调整 */
+.content :global(.katex-display) {
+  margin: 1.5em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* 使用 :global 包装全局样式 */
+.content :global(p) {
+  margin: 1.2em 0;
+}
+
+/* 增加段落和公式的间距 */
+.content > * {
+  margin: 1.2em 0;
 }
 
 .loadingContainer {
@@ -324,4 +345,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-} 
+}
