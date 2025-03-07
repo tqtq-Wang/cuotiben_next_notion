@@ -194,3 +194,60 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Notion 数据库设计
+
+### 数据库属性
+
+| 属性名 | 类型 | 说明 |
+|--------|------|------|
+| 题目 | Title | 题目内容，支持 LaTeX 公式 |
+| 解题思路 | Rich Text | 解题关键思路和方法 |
+| 详细解答 | Rich Text | 完整的解答过程 |
+| 核心知识点 | Multi-select | 题目涉及的知识点标签 |
+| 错误原因 | Rich Text | 做错的原因分析 |
+| 提交时间 | Date | 题目录入时间 |
+
+### 属性说明
+
+1. **题目 (Title)**
+   - 作为数据库的主标题
+   - 支持 LaTeX 公式渲染
+   - 格式：`$$公式$$` 或 `\(行内公式\)`
+
+2. **解题思路 (Rich Text)**
+   - 简要描述解题方法和关键点
+   - 限制在 200 字以内
+   - 包含关键公式（如有）
+
+3. **详细解答 (Rich Text)**
+   - 完整的解题步骤
+   - 每个步骤配有公式说明
+   - 选择题需分析所有选项
+
+4. **核心知识点 (Multi-select)**
+   - 可多选的知识点标签
+   - 用于分类和统计
+   - 支持动态添加新知识点
+
+5. **错误原因 (Rich Text)**
+   - 记录做错的具体原因
+   - 用于后期复习和总结
+   - 可选填项
+
+6. **提交时间 (Date)**
+   - 自动记录创建时间
+   - 用于排序和统计
+
+### 数据示例
+
+```json
+{
+  "题目": "求导数：\\( f(x) = e^{x^2} \\)",
+  "解题思路": "使用链式法则，将复合函数分解求导",
+  "详细解答": "步骤1：设外层函数为指数函数\n步骤2：内层函数为二次函数\n步骤3：应用链式法则：$$ f'(x) = 2x e^{x^2} $$",
+  "核心知识点": ["导数的计算", "链式法则"],
+  "错误原因": "忘记使用链式法则",
+  "提交时间": "2024-01-01T12:00:00Z"
+}
+```
