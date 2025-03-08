@@ -16,8 +16,9 @@ interface ArchivedQuestion extends QuestionData {
   submit_time: string
 }
 
-interface GroupedPoints {
-  [subject: string]: {
+interface GroupedSubject {
+  questionCount: number
+  points: {
     point: string
     fullPoint: string
     count: number
@@ -53,27 +54,47 @@ export default function Archive() {
     fetchData()
   }, [])
 
-  const groupedPoints = useMemo(() => {
-    return questions.reduce((acc, q) => {
-      q.core_knowledge.forEach(fullPoint => {
+  const groupedSubjects = useMemo(() => {
+    const subjects: Record<string, GroupedSubject> = {}
+
+    questions.forEach(question => {
+      // 收集题目涉及的所有科目（去重）
+      const subjectSet = new Set<string>()
+      question.core_knowledge.forEach(fullPoint => {
+        const [subject] = fullPoint.split('-')
+        subjectSet.add(subject)
+      })
+
+      // 更新科目题目计数（每个题目在每个科目中只计1次）
+      subjectSet.forEach(subject => {
+        if (!subjects[subject]) {
+          subjects[subject] = {
+            questionCount: 0,
+            points: []
+          }
+        }
+        subjects[subject].questionCount += 1
+      })
+
+      // 更新知识点计数
+      question.core_knowledge.forEach(fullPoint => {
         const [subject, ...pointParts] = fullPoint.split('-')
         const point = pointParts.join('-')
-        
-        if (!acc[subject]) acc[subject] = []
-        
-        const existing = acc[subject].find(p => p.fullPoint === fullPoint)
-        if (existing) {
-          existing.count++
+
+        const existingPoint = subjects[subject]?.points.find(p => p.fullPoint === fullPoint)
+        if (existingPoint) {
+          existingPoint.count += 1
         } else {
-          acc[subject].push({
+          subjects[subject]?.points.push({
             point,
             fullPoint,
             count: 1
           })
         }
       })
-      return acc
-    }, {} as GroupedPoints)
+    })
+
+    return subjects
   }, [questions])
 
   const handleQuestionAdded = async () => {
@@ -149,7 +170,7 @@ export default function Archive() {
           </div>
         </div>
         <div className={styles.catalogContent}>
-          {Object.entries(groupedPoints).map(([subject, points]) => (
+          {Object.entries(groupedSubjects).map(([subject, subjectData]) => (
             <div key={subject} className={styles.subjectGroup}>
               <div 
                 className={styles.subjectHeader}
@@ -157,12 +178,12 @@ export default function Archive() {
               >
                 <h3>{subject}</h3>
                 <span className={styles.countBadge}>
-                  {points.reduce((sum, p) => sum + p.count, 0)}
+                  {subjectData.questionCount}
                 </span>
               </div>
               {expandedSubjects.includes(subject) && (
                 <div className={styles.pointsList}>
-                  {points.map(({ point, fullPoint, count }) => (
+                  {subjectData.points.map(({ point, fullPoint, count }) => (
                     <div
                       key={fullPoint}
                       className={`${styles.pointItem} ${
