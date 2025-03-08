@@ -10,8 +10,10 @@ export async function GET(
   context: { params: { id: string } }
 ) {
   try {
+    // 确保先等待 params 对象
+    const params = await context.params;
     const response = await notion.pages.retrieve({
-      page_id: context.params.id
+      page_id: params.id
     }) as unknown as NotionPageResponse
 
     const question = {
@@ -90,4 +92,4 @@ export async function DELETE(
       { status: 500 }
     )
   }
-} 
+}
