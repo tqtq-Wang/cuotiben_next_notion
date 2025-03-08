@@ -1,3 +1,4 @@
+// src/types/notion.ts
 import { GetPageResponse } from '@notionhq/client/build/src/api-endpoints'
 
 export interface NotionOption {

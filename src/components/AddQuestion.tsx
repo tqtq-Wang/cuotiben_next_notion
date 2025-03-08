@@ -1,3 +1,4 @@
+// src/components/AddQuestion.tsx
 'use client'
 import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
