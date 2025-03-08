@@ -396,3 +396,43 @@
 .dashboardButton:hover {
   background: #0051a2;
 } 
+
+/* 科目分组样式 */
+.subjectGroup {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.subjectHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  background: #f8f9fa;
+  transition: background 0.2s;
+}
+
+.subjectHeader:hover {
+  background: #f1f3f5;
+}
+
+.countBadge {
+  background: #4CAF50;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.9em;
+}
+
+/* 科目标签样式 */
+.subjectBadge {
+  background: #2196F3;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 6px;
+  font-size: 0.8em;
+  display: inline-block;
+  line-height: 1.4;
+}

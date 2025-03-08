@@ -6,6 +6,19 @@ export interface QuestionData {
   core_knowledge: string[]
 }
 
+// 添加科目类型
+export const SUBJECTS = [
+  '数学',
+  '英语',
+  '政治',
+  '数据结构',
+  '计算机组成原理',
+  '操作系统',
+  '计算机网络'
+] as const
+
+export type Subject = typeof SUBJECTS[number]
+
 export interface SubmitData {
   meta: {
     error_reason: string

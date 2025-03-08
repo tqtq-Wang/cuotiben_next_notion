@@ -1,6 +1,6 @@
 // src/app/archive/page.tsx
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
@@ -16,51 +16,77 @@ interface ArchivedQuestion extends QuestionData {
   submit_time: string
 }
 
+interface GroupedPoints {
+  [subject: string]: {
+    point: string
+    fullPoint: string
+    count: number
+  }[]
+}
+
 export default function Archive() {
   const [questions, setQuestions] = useState<ArchivedQuestion[]>([])
-  const [knowledgePoints, setKnowledgePoints] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [selectedPoint, setSelectedPoint] = useState<string | null>(null)
   const [showCatalog, setShowCatalog] = useState(false)
   const [showAddQuestion, setShowAddQuestion] = useState(false)
+  const [expandedSubjects, setExpandedSubjects] = useState<string[]>([])
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [questionsRes] = await Promise.all([
+          fetch('/api/notion/questions'),
+        ])
+        
+        if (!questionsRes.ok) throw new Error('获取数据失败')
+        
+        const questionsData = await questionsRes.json()
+        setQuestions(questionsData.questions)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
     fetchData()
   }, [])
 
-  const fetchData = async () => {
-    try {
-      const [questionsRes, pointsRes] = await Promise.all([
-        fetch('/api/notion/questions'),
-        fetch('/api/notion/knowledge-points')
-      ])
-      
-      if (!questionsRes.ok || !pointsRes.ok) throw new Error('获取数据失败')
-      
-      const questionsData = await questionsRes.json()
-      const pointsData = await pointsRes.json()
-      
-      setQuestions(questionsData.questions)
-      setKnowledgePoints(pointsData.points)
-    } catch (err: any) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const groupedPoints = useMemo(() => {
+    return questions.reduce((acc, q) => {
+      q.core_knowledge.forEach(fullPoint => {
+        const [subject, ...pointParts] = fullPoint.split('-')
+        const point = pointParts.join('-')
+        
+        if (!acc[subject]) acc[subject] = []
+        
+        const existing = acc[subject].find(p => p.fullPoint === fullPoint)
+        if (existing) {
+          existing.count++
+        } else {
+          acc[subject].push({
+            point,
+            fullPoint,
+            count: 1
+          })
+        }
+      })
+      return acc
+    }, {} as GroupedPoints)
+  }, [questions])
 
   const handleQuestionAdded = async () => {
-    await fetchData()
+    const questionsRes = await fetch('/api/notion/questions')
+    if (questionsRes.ok) {
+      const questionsData = await questionsRes.json()
+      setQuestions(questionsData.questions)
+    }
     setShowAddQuestion(false)
   }
 
   const selectKnowledgePoint = (point: string) => {
     setSelectedPoint(currentPoint => currentPoint === point ? null : point)
-  }
-
-  const getQuestionCountByPoint = (point: string) => {
-    return questions.filter(q => q.core_knowledge.includes(point)).length
   }
 
   const filteredQuestions = selectedPoint
@@ -71,12 +97,21 @@ export default function Archive() {
     setShowCatalog(!showCatalog)
   }
 
+  const toggleSubject = (subject: string) => {
+    setExpandedSubjects(prev => 
+      prev.includes(subject) 
+        ? prev.filter(s => s !== subject) 
+        : [...prev, subject]
+    )
+  }
+
   if (loading) return (
     <div className={styles.loadingContainer}>
       <div className={styles.loadingSpinner}></div>
       <p>加载中...</p>
     </div>
   )
+
   if (error) return (
     <div className={styles.errorContainer}>
       <h2>出错了</h2>
@@ -114,22 +149,35 @@ export default function Archive() {
           </div>
         </div>
         <div className={styles.catalogContent}>
-          <div className={styles.pointsList}>
-            {knowledgePoints.map(point => {
-              const count = getQuestionCountByPoint(point)
-              if (count === 0) return null
-              return (
-                <div
-                  key={point}
-                  className={`${styles.pointItem} ${selectedPoint === point ? styles.selectedPoint : ''}`}
-                  onClick={() => selectKnowledgePoint(point)}
-                >
-                  <span className={styles.pointText}>{point}</span>
-                  <span className={styles.pointCount}>{count}</span>
+          {Object.entries(groupedPoints).map(([subject, points]) => (
+            <div key={subject} className={styles.subjectGroup}>
+              <div 
+                className={styles.subjectHeader}
+                onClick={() => toggleSubject(subject)}
+              >
+                <h3>{subject}</h3>
+                <span className={styles.countBadge}>
+                  {points.reduce((sum, p) => sum + p.count, 0)}
+                </span>
+              </div>
+              {expandedSubjects.includes(subject) && (
+                <div className={styles.pointsList}>
+                  {points.map(({ point, fullPoint, count }) => (
+                    <div
+                      key={fullPoint}
+                      className={`${styles.pointItem} ${
+                        selectedPoint === fullPoint ? styles.selectedPoint : ''
+                      }`}
+                      onClick={() => selectKnowledgePoint(fullPoint)}
+                    >
+                      <span className={styles.pointText}>{point}</span>
+                      <span className={styles.pointCount}>{count}</span>
+                    </div>
+                  ))}
                 </div>
-              )
-            })}
-          </div>
+              )}
+            </div>
+          ))}
         </div>
       </aside>
 
@@ -161,7 +209,7 @@ export default function Archive() {
         <div className={styles.stats}>
           {selectedPoint ? (
             <p>
-              {selectedPoint}: {filteredQuestions.length} 道题目
+              {selectedPoint.split('-')[0]}: {filteredQuestions.length} 道题目
             </p>
           ) : (
             <p>共 {questions.length} 道题目</p>
@@ -180,15 +228,22 @@ export default function Archive() {
                 </ReactMarkdown>
               </div>
               <div className={styles.tags}>
-                {question.core_knowledge.map((point) => (
-                  <span 
-                    key={point} 
-                    className={`${styles.tag} ${selectedPoint === point ? styles.selectedTag : ''}`}
-                    onClick={() => selectKnowledgePoint(point)}
-                  >
-                    {point}
-                  </span>
-                ))}
+                {question.core_knowledge.map((fullPoint) => {
+                  const [subject, ...pointParts] = fullPoint.split('-')
+                  const point = pointParts.join('-')
+                  return (
+                    <span 
+                      key={fullPoint} 
+                      className={`${styles.tag} ${
+                        selectedPoint === fullPoint ? styles.selectedTag : ''
+                      }`}
+                      onClick={() => selectKnowledgePoint(fullPoint)}
+                    >
+                      <span className={styles.subjectBadge}>{subject}</span>
+                      {point}
+                    </span>
+                  )
+                })}
               </div>
               <div className={styles.meta}>
                 <p>错误原因: {question.error_reason || '未填写'}</p>
@@ -231,4 +286,4 @@ export default function Archive() {
       </button>
     </div>
   )
-} 
+}

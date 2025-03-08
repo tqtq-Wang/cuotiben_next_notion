@@ -5,7 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import ReactMarkdown from 'react-markdown'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
-import { QuestionData, validateQuestionData } from '../types/types'
+import { QuestionData, validateQuestionData, SUBJECTS } from '../types/types'
 import styles from './AddQuestion.module.css'
 import { normalizeContent } from '../utils/format'
 
@@ -26,6 +26,7 @@ export default function AddQuestion({ onSuccess }: AddQuestionProps) {
   const [jsonInput, setJsonInput] = useState('')
   const [inputError, setInputError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [selectedSubject, setSelectedSubject] = useState<typeof SUBJECTS[number] | ''>('')
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: { 'application/json': ['.json'] },
@@ -63,10 +64,22 @@ export default function AddQuestion({ onSuccess }: AddQuestionProps) {
   }
 
   const handleSubmit = async () => {
+    if (!selectedSubject) {
+      alert('请选择科目')
+      return
+    }
     if (!data) return
+    
     setSubmitting(true)
     
     try {
+      const processedData = {
+        ...data,
+        core_knowledge: data.core_knowledge.map(point => 
+          `${selectedSubject}-${point}`
+        )
+      }
+
       const res = await fetch('/api/notion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,7 +88,7 @@ export default function AddQuestion({ onSuccess }: AddQuestionProps) {
             error_reason: errorReason || '未填写',
             submit_time: new Date().toISOString()
           },
-          content: data
+          content: processedData
         })
       })
       
@@ -95,6 +108,20 @@ export default function AddQuestion({ onSuccess }: AddQuestionProps) {
   return (
     <div className={styles.container}>
       <div className={styles.inputSection}>
+        <div className={styles.subjectSelector}>
+          <label>选择科目：</label>
+          <select
+            value={selectedSubject}
+            onChange={(e) => setSelectedSubject(e.target.value as typeof SUBJECTS[number])}
+            required
+          >
+            <option value="">-- 请选择科目 --</option>
+            {SUBJECTS.map(subject => (
+              <option key={subject} value={subject}>{subject}</option>
+            ))}
+          </select>
+        </div>
+
         <div {...getRootProps({ className: styles.dropzone })}>
           <input {...getInputProps()} />
           <p>拖拽JSON文件到此区域或点击选择文件</p>
@@ -122,7 +149,7 @@ export default function AddQuestion({ onSuccess }: AddQuestionProps) {
 
       {data && (
         <div className={styles.previewSection}>
-          <h3>预览</h3>
+          <h3>预览（将自动添加科目前缀）</h3>
           <div className={styles.preview}>
             <section className={styles.previewItem}>
               <h4>题目</h4>
@@ -140,7 +167,10 @@ export default function AddQuestion({ onSuccess }: AddQuestionProps) {
               <h4>核心知识点</h4>
               <div className={styles.tags}>
                 {data.core_knowledge.map((point) => (
-                  <span key={point} className={styles.tag}>{point}</span>
+                  <span key={point} className={styles.tag}>
+                    <span className={styles.subjectBadge}>{selectedSubject}</span>
+                    {point}
+                  </span>
                 ))}
               </div>
             </section>
@@ -181,11 +211,11 @@ export default function AddQuestion({ onSuccess }: AddQuestionProps) {
 
       <button 
         onClick={handleSubmit}
-        disabled={!data || submitting}
+        disabled={!data || !selectedSubject || submitting}
         className={styles.submitButton}
       >
         {submitting ? '提交中...' : '提交题目'}
       </button>
     </div>
   )
-} 
+}
