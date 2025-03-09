@@ -268,7 +268,7 @@ export default function Archive() {
               </div>
               <div className={styles.meta}>
                 <p>错误原因: {question.error_reason || '未填写'}</p>
-                <p>提交时间: {new Date(question.submit_time).toLocaleString()}</p>
+                <p>提交时间: {question.submit_time || '未知时间'}</p>
               </div>
               <button 
                 className={styles.detailButton}

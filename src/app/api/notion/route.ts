@@ -67,7 +67,10 @@ export async function POST(request: Request) {
           rich_text: [{ text: { content: meta.error_reason } }]
         },
         '提交时间': {
-          date: { start: meta.submit_time }
+          // 确保日期格式正确，使用中文日期格式
+          date: { 
+            start: new Date().toISOString().split('T')[0] // 仅使用日期部分，如"2023-10-15"
+          }
         }
       }
     })

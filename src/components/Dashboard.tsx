@@ -52,13 +52,70 @@ export default function Dashboard({ questions }: DashboardProps) {
     })
     setKnowledgeStats(knowledgeCount)
 
-    // 统计提交时间分布
+    // 统计提交时间分布 - 修改为显示最近7天
     const timeCount: { [key: string]: number } = {}
-    questions.forEach(q => {
-      const date = new Date(q.submit_time).toLocaleDateString()
-      timeCount[date] = (timeCount[date] || 0) + 1
+    
+    // 获取当前日期作为参考点
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    
+    // 创建最近7天的日期数组，包括今天
+    const last7Days = Array.from({length: 7}, (_, i) => {
+      const date = new Date(today)
+      date.setDate(date.getDate() - i)
+      return date
+    }).reverse() // 反转使其按日期升序排列
+    
+    // 初始化所有日期的计数为0，使用YYYY-MM-DD格式作为键以便精确比较
+    const dateLabels: string[] = []
+    last7Days.forEach(date => {
+      const dateStr = date.toISOString().split('T')[0]
+      dateLabels.push(date.toLocaleDateString())
+      timeCount[dateStr] = 0
     })
-    setTimelineData(timeCount)
+    
+    // 统计每个日期的题目数
+    questions.forEach(q => {
+      try {
+        // 检查提交时间是否存在
+        if (!q.submit_time) return;
+        
+        // 处理中文格式时间 "2025年3月9日 10:13"
+        const match = q.submit_time.match(/(\d+)年(\d+)月(\d+)日/);
+        if (!match) return;
+        
+        const [_, year, month, day] = match;
+        // 创建日期对象
+        const submitDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        
+        // 检查是否是有效日期
+        if (isNaN(submitDate.getTime())) return;
+        
+        submitDate.setHours(0, 0, 0, 0); // 确保只比较日期部分
+        const dateStr = submitDate.toISOString().split('T')[0];
+        
+        // 检查此日期是否在最近7天内
+        const oldestDate = last7Days[0].getTime();
+        const newestDate = last7Days[last7Days.length - 1].getTime();
+        
+        if (submitDate.getTime() >= oldestDate && submitDate.getTime() <= newestDate) {
+          if (timeCount[dateStr] !== undefined) {
+            timeCount[dateStr] += 1;
+          }
+        }
+      } catch (error) {
+        console.error('处理日期时出错:', error, '题目ID:', q.id, '提交时间:', q.submit_time);
+      }
+    });
+    
+    // 转换回格式化的日期以显示在图表中，但保持正确的顺序
+    const orderedTimeCount: { [key: string]: number } = {}
+    last7Days.forEach((date, index) => {
+      const dateStr = date.toISOString().split('T')[0]
+      orderedTimeCount[dateLabels[index]] = timeCount[dateStr]
+    })
+    
+    setTimelineData(orderedTimeCount)
 
     // 统计知识点覆盖率
     const totalPoints = Object.keys(knowledgeCount).length
@@ -186,4 +243,4 @@ export default function Dashboard({ questions }: DashboardProps) {
       </div>
     </div>
   )
-} 
+}

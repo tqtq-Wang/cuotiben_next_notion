@@ -148,6 +148,11 @@ export default function QuestionDetail({ params }: PageProps) {
   }
 
   const formatDate = (dateString: string) => {
+    // 如果字符串中含有中文格式的年月日，说明已经格式化过，直接返回
+    if (dateString && (dateString.includes('年') || dateString.includes('月'))) {
+      return dateString;
+    }
+    
     try {
       return new Date(dateString).toLocaleString('zh-CN', {
         year: 'numeric',
@@ -159,7 +164,7 @@ export default function QuestionDetail({ params }: PageProps) {
         hour12: false
       })
     } catch (err) {
-      return dateString
+      return dateString || '未知时间'
     }
   }
 
@@ -285,9 +290,9 @@ export default function QuestionDetail({ params }: PageProps) {
         {renderEditableContent('error_reason', '错误原因')}
 
         <div className={styles.meta}>
-          提交时间: {question && formatDate(question.submit_time)}
+          提交时间: {question ? question.submit_time : '未知时间'}
         </div>
       </div>
     </main>
   )
-} 
+}

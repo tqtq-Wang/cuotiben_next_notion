@@ -29,6 +29,7 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   padding: 2rem;
+  line-height: 1.8; /* 提高行高 */
 }
 
 .section {
@@ -89,7 +90,7 @@
 /* LaTeX 公式样式 */
 .content :global(.katex) {
   font-size: 1.1em;
-  padding: 0.4em 0.6em; /* 增加公式的上下内边距 */
+  padding: 0.2em 0;
   background: #f8f9fa;
   border-radius: 4px;
   margin: 0.3em 0; /* 添加公式的上下外边距 */
@@ -97,19 +98,77 @@
 
 /* LaTeX 公式样式调整 */
 .content :global(.katex-display) {
-  margin: 1.5em 0;
-  overflow-x: auto;
+  margin: 2em 0; /* 增加公式块上下间距 */
+  overflow-x: auto; /* 添加水平滚动 */
   overflow-y: hidden;
+  max-width: 100%;
+  padding: 0.5em 0;
 }
 
 /* 使用 :global 包装全局样式 */
 .content :global(p) {
   margin: 1.2em 0;
+  line-height: 1.8;
 }
 
 /* 增加段落和公式的间距 */
 .content > * {
   margin: 1.2em 0;
+}
+
+/* 给列表项中的内容添加更多间距 */
+.content :global(li) {
+  margin: 0.8em 0; /* 列表项之间的间距 */
+  line-height: 2; /* 列表项内更大的行高 */
+}
+
+/* 给列表项中的嵌套内容添加样式 */
+.content :global(li p) {
+  margin: 0.6em 0;
+}
+
+/* 样式化有序列表和无序列表 */
+.content :global(ol), .content :global(ul) {
+  padding-left: 1.8em;
+  margin: 1.2em 0;
+}
+
+/* 增加子列表的间距 */
+.content :global(li > ul), .content :global(li > ol) {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* 增加插入线条，分隔不同解法 */
+.content :global(h3) {
+  position: relative;
+}
+
+.content :global(h3)::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: #eee;
+  margin-top: 0.5em;
+}
+
+/* 处理公式过宽的问题 */
+.content :global(div.katex-display) {
+  width: 100%; /* 确保宽度不超过容器 */
+  overflow-x: auto; /* 超出部分显示滚动条 */
+  padding: 8px 0; /* 增加上下间距，避免滚动条太靠近内容 */
+}
+
+/* 嵌套列表和缩进内容的样式 */
+.content :global(li > ul), .content :global(li > p) {
+  margin-top: 0.6em;
+  margin-left: 1em;
+}
+
+/* 处理公式中的等号对齐 */
+.content :global(div.katex-display > .katex > .katex-html) {
+  padding: 6px 0;
 }
 
 .loadingContainer {
